@@ -16,6 +16,8 @@ const TYPE_COLORS = {
   MEDIUM: THEME.COLORS.WARNING_LIGHT,
 };
 
+const PressableAnimated = Animated.createAnimatedComponent(Pressable);
+
 type Props = PressableProps & {
   title: string;
   isChecked?: boolean;
@@ -67,18 +69,19 @@ export function Level({
   }, [isChecked]);
 
   return (
-    <Pressable onPressIn={onPressIn} onPressOut={onPressOut} {...rest}>
-      <Animated.View
-        style={[
-          styles.container,
-          animatedContainerStyle,
-          {
-            borderColor: COLOR,
-          },
-        ]}
-      >
-        <Animated.Text style={[styles.title]}>{title}</Animated.Text>
-      </Animated.View>
-    </Pressable>
+    <PressableAnimated
+      onPressIn={onPressIn}
+      onPressOut={onPressOut}
+      style={[
+        styles.container,
+        animatedContainerStyle,
+        {
+          borderColor: COLOR,
+        },
+      ]}
+      {...rest}
+    >
+      <Animated.Text style={[styles.title]}>{title}</Animated.Text>
+    </PressableAnimated>
   );
 }
