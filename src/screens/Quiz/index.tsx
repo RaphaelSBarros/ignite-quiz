@@ -25,6 +25,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { ProgressBar } from "../../components/ProgressBar";
 import { THEME } from "../../styles/theme";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 interface Params {
   id: string;
@@ -43,6 +44,7 @@ export function Quiz() {
 
   const shake = useSharedValue(0);
   const scrollY = useSharedValue(0);
+  const cardPosition = useSharedValue(0);
 
   const { navigate } = useNavigation();
 
@@ -180,6 +182,14 @@ export function Quiz() {
     };
   });
 
+  const onPan = Gesture.Pan()
+    .onUpdate((event) => {
+      cardPosition.value = event.translationX;
+    })
+    .onEnd(() => {
+      cardPosition.value = withTiming(0);
+    });
+
   return (
     <View style={styles.container}>
       <Animated.View style={fixedProgressBarStyles}>
@@ -204,14 +214,18 @@ export function Quiz() {
             totalOfQuestions={quiz.questions.length}
           />
         </Animated.View>
-        <Animated.View style={shakeStyleAnimated}>
-          <Question
-            key={quiz.questions[currentQuestion].title}
-            question={quiz.questions[currentQuestion]}
-            alternativeSelected={alternativeSelected}
-            setAlternativeSelected={setAlternativeSelected}
-          />
-        </Animated.View>
+
+        <GestureDetector gesture={onPan}>
+          <Animated.View style={shakeStyleAnimated}>
+            <Question
+              key={quiz.questions[currentQuestion].title}
+              question={quiz.questions[currentQuestion]}
+              alternativeSelected={alternativeSelected}
+              setAlternativeSelected={setAlternativeSelected}
+            />
+          </Animated.View>
+        </GestureDetector>
+
         <View style={styles.footer}>
           <OutlineButton title="Parar" onPress={handleStop} />
           <ConfirmButton onPress={handleConfirm} />
