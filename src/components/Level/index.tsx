@@ -5,6 +5,7 @@ import { styles } from "./styles";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
 } from "react-native-reanimated";
 
 const TYPE_COLORS = {
